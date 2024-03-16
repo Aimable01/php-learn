@@ -29,7 +29,8 @@ if(isset($_POST['submit'])){
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     </head>
     <body>
-        <a class="btn btn-info" href="form.html">Back</a>
-        <a href="read.php">View record from database</a>
+        <br>
+        <a class="btn btn-info" href="form.html">Back</a><br>
+        <a class="btn btn-info" href="read.php">View record from database</a>
     </body>
 </html>    
