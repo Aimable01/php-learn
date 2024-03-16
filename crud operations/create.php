@@ -28,24 +28,3 @@ if(isset($_POST['submit'])){
     <a class="btn btn-info" href="form.html"><br><br>Back</a>
     <a href="read.php"><br><br>View record from database</a>
 </html>    
-
-<!--?php
-#  learning
-if(isset($_POST['submit'])){
-    $name = $_POST['name'];
-    $password = $_POST['password'];
-
-    $sql = "INSERT INTO 
-                users(name,password)
-            VALUES 
-                ('$name','$password')";
-    
-    $result = $conn->$sql;
-    if($result){
-        echo 'Inserted successfully';
-    }else{
-        echo 'error: '.$conn->error;
-    }
-    $conn->close();
-}
-?-->
