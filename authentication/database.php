@@ -1,9 +1,10 @@
 <?php
-$server = "localhost";
-$username = "root;
-$password = ";
-$dbname = "authLearn";
-$conn = mysqli_connect($server, $username, $password, $dbname);
+
+$hostName = "localhost";
+$dbUser = "root";
+$dbPassword = "";
+$dbName = "authlearn";
+$conn = mysqli_connect($hostName, $dbUser, $dbPassword, $dbName);
 if (!$conn) {
-    die("Something went wrong");
+    die("Something went wrong;");
 }
