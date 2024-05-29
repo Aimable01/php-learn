@@ -16,57 +16,55 @@ if (isset($_SESSION["user"])) {
 </head>
 <body>
     <div class="container">
-        <?php
-        if (isset($_POST["submit"])) {
-            $fullName = $_POST["fullname"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $passwordRepeat = $_POST["repeat_password"];
+    <?php
+    if (isset($_POST["submit"])) {
+        $fullName = $_POST["fullname"];
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $passwordRepeat = $_POST["repeat_password"];
 
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-            $errors = array();
+        $errors = [];
 
-            if (empty($fullName) or empty($email) or empty($password) or empty($passwordRepeat)) {
-                array_push($errors, "All fields are required");
-            }
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                array_push($errors, "Email is not valid");
-            }
-            if (strlen($password) < 8) {
-                array_push($errors, "Password must be at least 8 charactes long");
-            }
-            if ($password !== $passwordRepeat) {
-                array_push($errors, "Password does not match");
-            }
-            require_once "database.php";
-            $sql = "SELECT * FROM users WHERE email = '$email'";
-            $result = mysqli_query($conn, $sql);
-            $rowCount = mysqli_num_rows($result);
-            if ($rowCount > 0) {
-                array_push($errors, "Email already exists!");
-            }
-            if (count($errors) > 0) {
-                foreach ($errors as $error) {
-                    echo "<div class='alert alert-danger'>$error</div>";
-                }
-            } else {
-
-                $sql = "INSERT INTO users (full_name, email, password) VALUES ( ?, ?, ? )";
-                $stmt = mysqli_stmt_init($conn);
-                $prepareStmt = mysqli_stmt_prepare($stmt, $sql);
-                if ($prepareStmt) {
-                    mysqli_stmt_bind_param($stmt, "sss", $fullName, $email, $passwordHash);
-                    mysqli_stmt_execute($stmt);
-                    echo "<div class='alert alert-success'>You are registered successfully.</div>";
-                } else {
-                    die("Something went wrong");
-                }
-            }
-
-
+        if (empty($fullName) || empty($email) || empty($password) || empty($passwordRepeat)) {
+            $errors[] = "All fields are required";
         }
-        ?>
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Email is not valid";
+        }
+        if (strlen($password) < 8) {
+            $errors[] = "Password must be at least 8 characters long";
+        }
+        if ($password !== $passwordRepeat) {
+            $errors[] = "Passwords do not match";
+        }
+
+        require_once "database.php";
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+
+        if (mysqli_stmt_num_rows($stmt) > 0) {
+            $errors[] = "Email already exists!";
+        }
+
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                echo "<div class='alert alert-danger'>$error</div>";
+            }
+        } else {
+            $sql = "INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "sss", $fullName, $email, $passwordHash);
+            mysqli_stmt_execute($stmt);
+            echo "<div class='alert alert-success'>You are registered successfully.</div>";
+        }
+    }
+    ?>
+
         <form action="registration.php" method="post">
             <div class="form-group">
                 <input type="text" class="form-control" name="fullname" placeholder="Full Name:">
