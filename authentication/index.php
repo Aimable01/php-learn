@@ -1,4 +1,5 @@
 <?php
+require_once "database.php";
 session_start();
 if (!isset($_SESSION["user"])) {
     header("Location: login.php");
@@ -15,9 +16,51 @@ if (!isset($_SESSION["user"])) {
     <title>User Dashboard</title>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="header">
         <h1>Welcome to Dashboard</h1>
         <a href="logout.php" class="btn btn-warning">Logout</a>
     </div>
+
+    <!-- view students -->
+    <div class="container">
+        <h2 class="mt-5">Students List</h2>
+        <a href="create.php" class="btn btn-primary mb-3">Add New Student</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Classname</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql = "SELECT * FROM students";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['email']}</td>
+                                <td>{$row['classname']}</td>
+                                <td>
+                                    <a href='edit.php?id={$row['id']}' class='btn btn-warning'>Edit</a>
+                                    <a href='delete.php?id={$row['id']}' class='btn btn-danger' onclick='return confirm(\"Are you sure?\")'>Delete</a>
+                                </td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No students found</td></tr>";
+                }
+                $conn->close();
+                ?>
+            </tbody>
+        </table>
+    </div>
+
 </body>
 </html>
