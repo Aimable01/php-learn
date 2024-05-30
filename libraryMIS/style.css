@@ -1,0 +1,32 @@
+body {
+  font-family: sans-serif;
+}
+.landon {
+  margin: 200px;
+}
+.landon h1 {
+  text-align: center;
+}
+.landon p {
+  text-align: center;
+  font-size: 20px;
+}
+
+.links a {
+  background-color: rgb(19, 42, 194);
+  color: white;
+  padding: 10px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.links a:hover {
+  background-color: rgb(11, 28, 142);
+  transition: all 0.5s;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
